@@ -10,7 +10,18 @@ const auth = new google.auth.OAuth2(
   process.env.REDIRECT_URI
 );
 
+const createCommentsFolder = () => {
+  const folderPath = path.join(__dirname, 'yorumlar');
+
+  fs.mkdir(folderPath, { recursive: true }, (err) => {
+    if (err) {
+      return;
+    }
+  });
+};
+
 const authenticate = () => {
+  createCommentsFolder();
   const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
