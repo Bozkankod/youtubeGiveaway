@@ -10,6 +10,7 @@ const auth = new google.auth.OAuth2(
   process.env.REDIRECT_URI
 );
 
+
 const createCommentsFolder = () => {
   const folderPath = path.join(__dirname, 'yorumlar');
 
@@ -125,7 +126,14 @@ const saveCommentsToFile = (comments, videoTitle) => {
   const sanitizedVideoTitle = videoTitle.replace(/[\\/:*?"<>|]/g, '');
   const fileName = `${sanitizedVideoTitle}_comments.json`;
   const filePath = path.join('yorumlar', fileName);
-  const json = JSON.stringify(comments, null, 2);
+  
+  // Add the videoTitle property to each comment object
+  const commentsWithVideoTitle = comments.map(comment => ({
+    ...comment,
+    videoTitle: videoTitle,
+  }));
+
+  const json = JSON.stringify(commentsWithVideoTitle, null, 2);
   fs.writeFile(filePath, json, (err) => {
     if (err) {
       console.error('Dosyaya kaydederken hata oluştu:', err);
